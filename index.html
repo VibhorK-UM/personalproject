@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="css/html5reset.css">
+<link rel="stylesheet" href="css/style.css">
+<title>Mooder</title>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Mooder</h1>
+    <p>Hover over any of the images to experience them</p>
+    
+    <div class="grid">
+
+        <div class="card">
+            <img src="images/img1.jpg" alt="Nightfall with stars and mountain"
+                 data-bg="images/cosmic.jpg" 
+                 data-audio="music/Town, Flow of Time, People.mp3">
+            <div class="card-content">
+                <div class="card-title">Cosmic</div>
+                <div class="card-description"
+                     data-rec="Book:The Midnight Library, Movie:Interstellar, Anime:Your Name">
+                    Vast emptiness yet there are flickers
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="images/img2.jpg" alt="Paper laterns hanging from the ceiling in a dark room"
+                 data-bg="images/god.png" 
+                 data-audio="music/The Great Legend.mp3">
+            <div class="card-content">
+                <div class="card-title">God's Palace</div>
+                <div class="card-description"
+                     data-rec="Book:Song of Achillies, Movie:Her, Anime:Spirited Away">
+                    Venture into the land of the Gods
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="images/img3.jpg" alt="A creak of sunshine in between valleys"
+                 data-bg="images/creak.jpg" 
+                 data-audio="music/Her Determination.mp3">
+            <div class="card-content">
+                <div class="card-title">Hope</div>
+                <div class="card-description"
+                     data-rec="Book:Never let me go, Movie:127 Hours, Anime:Decadence">
+                    The only thing you see is the sky
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="images/img4.jpg" alt="Snow covered environment"
+                 data-bg="images/snow.jpg" 
+                 data-audio="music/Snowfield.mp3">
+            <div class="card-content">
+                <div class="card-title">Snowfield</div>
+                <div class="card-description"
+                     data-rec="Book:The devotion of Suspect X, Movie:Blade Runner, Anime:Clannad">
+                    Soft snow on your bare feet and no one exists
+                </div>
+            </div>
+        </div>
+
+         <div class="card">
+            <img src="images/img5.jpg" alt="A wooden bridge surrounded by trees in fall"
+                 data-bg="images/bridge.jpg" 
+                 data-audio="music/To the Same Heights.mp3">
+            <div class="card-content">
+                <div class="card-title">Bridge to future</div>
+                <div class="card-description"
+                     data-rec="Book:Before the Coffee gets Cold, Movie:'Sorry,Baby', Anime:Aria">
+                    A bridge connecting the past and the future
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // 1. Select all images in the gallery
+    const images = document.querySelectorAll('.card img');
+    
+    // 2. Create a global audio object
+    let currentAudio = new Audio();
+
+    images.forEach(image => {
+        // --- LOGIC FIX START ---
+        // We need to find the specific description box associated with *this specific* image.
+        // We go up to the parent (.card), then find the description inside it.
+        const card = image.closest('.card');
+        const descriptionElement = card.querySelector('.card-description');
+        
+        // Store the original text of *this specific* card
+        const originalText = descriptionElement.textContent.trim();
+        
+        // Store the recommendation text found in the data-rec attribute
+        const recText = descriptionElement.getAttribute('data-rec');
+        // --- LOGIC FIX END ---
+
+        image.addEventListener('mouseenter', () => {
+            // A. Change Background
+            const bgUrl = image.getAttribute('data-bg');
+            if(bgUrl) document.body.style.backgroundImage = `url('${bgUrl}')`;
+
+            // B. Change the text to the Recommendation
+            if(descriptionElement && recText) {
+                descriptionElement.textContent = recText;
+            }
+
+            // C. Play Audio
+            const audioUrl = image.getAttribute('data-audio');
+            if (audioUrl) {
+                currentAudio.src = audioUrl;
+                currentAudio.play().catch(error => {
+                    console.log("Autoplay blocked usually until user interacts: ", error);
+                });
+            }
+        });
+
+        image.addEventListener('mouseleave', () => {
+            // A. Revert Background
+            document.body.style.backgroundImage = ''; 
+
+            // B. Stop Audio
+            currentAudio.pause();
+            currentAudio.currentTime = 0; 
+
+            // C. Revert back the text to original
+            if(descriptionElement) {
+                descriptionElement.textContent = originalText;
+            }
+       });
+    });
+</script>
+</body>
+</html>
