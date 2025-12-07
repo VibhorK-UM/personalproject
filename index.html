@@ -9,6 +9,7 @@
 </head>
 
 <body>
+    <main>
 
 <div class="container">
 
@@ -84,8 +85,20 @@
 
     </div>
 </div>
+    </main>
 
 <script>
+
+    
+
+    window.addEventListener("load", function() {
+	console.log("Good job opening the window");
+	audio = document.querySelector(".data-audio");
+	audio.load();
+	audio.autoplay = false;
+	audio.loop = true;
+	
+});
     // 1. Select all images in the gallery
     const images = document.querySelectorAll('.card img');
     
@@ -93,9 +106,7 @@
     let currentAudio = new Audio();
 
     images.forEach(image => {
-        // --- LOGIC FIX START ---
-        // We need to find the specific description box associated with *this specific* image.
-        // We go up to the parent (.card), then find the description inside it.
+        
         const card = image.closest('.card');
         const descriptionElement = card.querySelector('.card-description');
         
@@ -104,7 +115,6 @@
         
         // Store the recommendation text found in the data-rec attribute
         const recText = descriptionElement.getAttribute('data-rec');
-        // --- LOGIC FIX END ---
 
         image.addEventListener('mouseenter', () => {
             // A. Change Background
